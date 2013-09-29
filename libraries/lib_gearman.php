@@ -15,6 +15,7 @@ class Lib_gearman
     public $errors = array();
     public $client;
     public $worker;
+    public $priority = array('high', 'low', 'normal');
 
     /**
      * Constructor
@@ -82,11 +83,17 @@ class Lib_gearman
      * @access public
      * @param string
      * @param string
+     * @param string [high|low]
      * @return void
      */
-    public function do_job_background($function, $param)
+    public function do_job_background($function, $param, $priority = 'normal')
     {
-        $this->client->doBackground($function,$param, md5(uniqid(rand(), true)));
+        if (!in_array($priority, $this->priority)) {
+            return false;
+        }
+
+        $callback_function = ($priority == 'normal') ? 'doBackground' : 'do' . ucfirst($priority) . 'Background';
+        $this->client->{$callback_function}($function,$param, md5(uniqid(rand(), true)));
         log_message('debug', "Gearman Library: Performed task with function $function with parameter $param");
     }
 
@@ -96,12 +103,18 @@ class Lib_gearman
      * @access public
      * @param string
      * @param string
+     * @param string [high|normal|low]
      * @return string
      */
-    public function do_job_foreground($function, $param)
+    public function do_job_foreground($function, $param, $priority = 'normal')
     {
+        if (!in_array($priority, $this->priority)) {
+            return false;
+        }
+
+        $callback_function = 'do' . ucfirst($priority);
         log_message('debug', "Gearman Library: Performed task with function $function with parameter $param");
-        return $this->client->doNormal($function, $param, md5(uniqid(rand(), true)));
+        return $this->client->{$callback_function}($function, $param, md5(uniqid(rand(), true)));
     }
 
     /**
