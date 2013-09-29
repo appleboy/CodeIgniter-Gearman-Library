@@ -13,8 +13,8 @@ class Lib_gearman
     public $gearman_port = array();
     protected $ci;
     public $errors = array();
-    public $client;
-    public $worker;
+    public $client = null;
+    public $worker = null;
     public $priority = array('high', 'low', 'normal');
 
     /**
@@ -38,6 +38,8 @@ class Lib_gearman
     {
         $this->client = new GearmanClient();
         $this->_auto_connect($this->client);
+
+        return $this->client;
     }
 
     /**
@@ -50,6 +52,19 @@ class Lib_gearman
     {
         $this->worker = new GearmanWorker();
         $this->_auto_connect($this->worker);
+
+        return $this->worker;
+    }
+
+    /**
+     * get worker or client obj
+     *
+     * @access public
+     * @return void
+     */
+    public function current($obj = 'client')
+    {
+        return (isset($this->{$obj})) ? $this->{$obj} : false;
     }
 
     /**
