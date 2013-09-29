@@ -44,3 +44,86 @@ or load library from manual install:
 ```
 $this->load->library('lib_gearman');
 ```
+
+### Client Example
+
+Please refer: example/cli.php
+
+```
+public function client()
+{
+    $this->lib_gearman->gearman_client();
+
+    $emailData = array(
+        'name'  => 'web',
+        'email' => 'member@example.com',
+    );
+    $imageData = array(
+        'image' => '/var/www/pub/image/test.png',
+    );
+
+    $this->lib_gearman->do_job_background('sendEmail', serialize($emailData));
+    echo "Email sending is done.\n";
+    $this->lib_gearman->do_job_background('resizeImage', serialize($imageData));
+    echo "Image resizing is done.\n";
+}
+```
+
+### Worker example
+
+```
+public function worker()
+{
+    $worker = $this->lib_gearman->gearman_worker();
+
+    $this->lib_gearman->add_worker_function('sendEmail', 'Cli::doSendEmail');
+    $this->lib_gearman->add_worker_function('resizeImage', 'Cli::doResizeImage');
+
+    while ($this->lib_gearman->work()) {
+        if (!$worker->returnCode()) {
+            echo "worker done successfully \n";
+        }
+        if ($worker->returnCode() != GEARMAN_SUCCESS) {
+            echo "return_code: " . $this->lib_gearman->current('worker')->returnCode() . "\n";
+            break;
+        }
+    }
+}
+```
+
+### Define job function
+
+```
+public static function doSendEmail($job)
+{
+    $data = unserialize($job->workload());
+    print_r($data);
+    sleep(2);
+    echo "Email sending is done really.\n\n";
+}
+
+public static function doResizeImage($job)
+{
+    $data = unserialize($job->workload());
+    print_r($data);
+    sleep(2);
+    echo "Image resizing is really done.\n\n";
+}
+```
+
+### Run Test
+
+run worker:
+
+```
+$ php app/index.php cli worker
+```
+
+run client:
+
+```
+$ php app/index.php cli client
+$ php app/index.php cli client
+$ php app/index.php cli client
+....
+```
