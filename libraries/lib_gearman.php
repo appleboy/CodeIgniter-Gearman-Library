@@ -26,6 +26,28 @@ class Lib_gearman
     public function __construct()
     {
         $this->ci =& get_instance();
+
+        if (!$this->is_supported()) {
+            log_message('error', 'We are not support Gearman.');
+            exit('Gearman is not supported on the system, please install it first.');
+        }
+    }
+
+    /**
+     * Is supported
+     *
+     * Returns false if Gearman is not supported on the system.
+     * If it is, we setup the gearman object & return true
+     */
+    public function is_supported()
+    {
+        if ( ! extension_loaded('gearman')) {
+            log_message('error', 'The Gearman Extension must be loaded to use Gearman client.');
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -60,7 +82,8 @@ class Lib_gearman
      * get worker or client obj
      *
      * @access public
-     * @return void
+     * @param string
+     * @return object
      */
     public function current($obj = 'client')
     {
