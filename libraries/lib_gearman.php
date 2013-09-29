@@ -101,7 +101,7 @@ class Lib_gearman
     public function do_job_foreground($function, $param)
     {
         log_message('debug', "Gearman Library: Performed task with function $function with parameter $param");
-        return $this->client->do($function, $param, md5(uniqid(rand(), true)));
+        return $this->client->doNormal($function, $param, md5(uniqid(rand(), true)));
     }
 
     /**
