@@ -9,10 +9,10 @@ Please make sure you have setuped gearman daemon environment and gearman pecl dr
 For Ubuntu/Debian OS (apt-get install):
 
 ```
-# install gearman server
+// install gearman server
 $ aptitude -y install gearman gearman-job-server libgearman-dev libdrizzle0
 
-# install gearman extension
+// install gearman extension
 $ pecl install channel://pecl.php.net/gearman-1.1.2
 ```
 
