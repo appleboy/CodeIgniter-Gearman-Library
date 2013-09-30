@@ -51,7 +51,7 @@ $this->load->library('lib_gearman');
 
 ### Client Example
 
-Please refer: example/cli.php
+Please refer: `example/cli.php`
 
     public function client()
     {
