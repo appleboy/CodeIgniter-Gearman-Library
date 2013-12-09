@@ -25,7 +25,7 @@ $ pecl install channel://pecl.php.net/gearman-1.1.2
 You can install via http://getsparks.org/packages/codeigniter-gearman/show
 
 ```
-$ php tools/spark install -v1.0.1 codeigniter-gearman
+$ php tools/spark install -v1.0.2 codeigniter-gearman
 ```
 
 or manual install
@@ -40,7 +40,7 @@ $ cp libraries/lib_gearman.php your_application/libraries/
 load library from spark:
 
 ```
-$this->load->spark('codeigniter-gearman/1.0.1');
+$this->load->spark('codeigniter-gearman/1.0.2');
 ```
 
 or load library from manual install:
