@@ -28,8 +28,7 @@ class Lib_gearman
         $this->ci =& get_instance();
 
         if (!$this->is_supported()) {
-            log_message('error', 'We are not support Gearman.');
-            exit('Gearman is not supported on the system, please install it first.');
+            return false;
         }
     }
 
